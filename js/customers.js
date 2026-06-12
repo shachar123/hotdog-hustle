@@ -85,19 +85,12 @@ function makeOrder(typeKey, day) {
   var fries = Math.random() < type.extraChance;
   var soda  = Math.random() < type.extraChance;
 
-  // -- קלייה --
-  var toastChance = 0.5;
-  if (typeKey === 'critic') toastChance = 0.8;
-  else if (typeKey === 'vip') toastChance = 0.7;
-  var wantsToast = Math.random() < toastChance;
-
   return {
     bun: bun,
     sausage: sausage,
     toppings: toppings,
     fries: fries,
-    soda: soda,
-    wantsToast: wantsToast
+    soda: soda
   };
 }
 
@@ -166,15 +159,9 @@ function orderMatches(order, held) {
   if (!held.sausage) {
     match = false;
     reasons.push('חסרה נקניקייה');
-  } else {
-    if (held.sausage.type !== order.sausage) {
-      match = false;
-      reasons.push('סוג נקניקייה שגוי');
-    }
-    if (held.sausage.doneness === 'raw') {
-      match = false;
-      reasons.push('נא');
-    }
+  } else if (held.sausage.type !== order.sausage) {
+    match = false;
+    reasons.push('סוג נקניקייה שגוי');
   }
 
   // בדיקת תוספות
@@ -201,39 +188,12 @@ function orderMatches(order, held) {
     reasons.push(order.soda ? 'חסרה שתייה' : 'שתייה לא הוזמנה');
   }
 
-  // קביעת איכות
-  var quality = 'ok';
-
   if (!match) {
-    // אם הסיבה היחידה ל-match=false היא נקניקייה נאה, איכות גרועה
-    if (held.sausage && held.sausage.doneness === 'raw') {
-      quality = 'bad';
-    }
-    return { match: false, quality: quality, reasons: reasons };
+    return { match: false, quality: 'ok', reasons: reasons };
   }
 
-  // match === true; בודקים איכות
-  var sausagePerfect = held.sausage && held.sausage.doneness === 'perfect';
-  var sausageBurnt   = held.sausage && held.sausage.doneness === 'burnt';
-
-  var toastCorrect;
-  if (order.wantsToast) {
-    toastCorrect = held.toasted === 1; // 1 = קלייה מושלמת
-  } else {
-    toastCorrect = held.toasted === 0; // 0 = לא קלוי
-  }
-
-  if (sausageBurnt) {
-    quality = 'bad';
-  } else if (sausagePerfect && toastCorrect) {
-    quality = 'perfect';
-  } else if (held.toasted === 2) {
-    // לחמנייה שרופה
-    quality = 'ok';
-  } else {
-    quality = 'ok';
-  }
-
+  // speed-based quality: perfect if customer still has >60% patience
+  var quality = 'ok';
   return { match: true, quality: quality, reasons: reasons };
 }
 
@@ -280,11 +240,7 @@ function customerReward(cust, quality, patienceFrac) {
 
   coins = Math.round(coins);
 
-  // חישוב ניקוד
   var score = BALANCE.scoreServe;
-  if (quality === 'perfect') {
-    score += BALANCE.scorePerfectCook + BALANCE.scorePerfectToast;
-  }
 
   return { coins: coins, score: score };
 }

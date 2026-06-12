@@ -385,27 +385,30 @@ function sceneArt() {
     <image href="img/img_vendor.png" x="-52" y="-58" width="104" height="116" preserveAspectRatio="xMidYMin meet"/>
   </g>
 
-  <!-- ===== GRILL STATION ===== -->
-  <g id="st_grill" style="cursor:pointer">
+  <!-- ===== GRILL (decoration) ===== -->
+  <g>
     <!-- grill body -->
     <rect x="36" y="432" width="224" height="96" rx="10" fill="#282828" stroke="${OUT}" stroke-width="4"/>
     <!-- grill top surface -->
     <rect x="44" y="436" width="208" height="68" rx="6" fill="#1e1e1e" stroke="#444" stroke-width="2"/>
-    <!-- grill bars (4 slots) -->
+    <!-- grill bars -->
     <line x1="44" y1="452" x2="252" y2="452" stroke="#555" stroke-width="3.5"/>
     <line x1="44" y1="463" x2="252" y2="463" stroke="#555" stroke-width="3.5"/>
     <line x1="44" y1="474" x2="252" y2="474" stroke="#555" stroke-width="3.5"/>
     <line x1="44" y1="485" x2="252" y2="485" stroke="#555" stroke-width="3.5"/>
-    <line x1="44" y1="496" x2="252" y2="496" stroke="#555" stroke-width="3.5"/>
-    <!-- grill heat glow -->
-    <rect x="44" y="436" width="208" height="68" rx="6" fill="rgba(255,100,0,0.08)"/>
-    <!-- heat shimmer lines -->
-    <path d="M80 432 q3 -10 0 -20 M120 432 q3 -10 0 -20 M160 432 q3 -10 0 -20 M200 432 q3 -10 0 -20"
-          stroke="#aaa" stroke-width="2.5" fill="none" opacity="0.55"/>
-    <!-- grill label -->
+    <!-- 4 sausages always sitting on grill (cooked and ready) -->
+    <path d="M60 460 Q90 448 120 460" stroke="${OUT}" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M60 460 Q90 448 120 460" stroke="#a04828" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M88 466 Q118 454 148 466" stroke="${OUT}" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M88 466 Q118 454 148 466" stroke="#b05030" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M120 460 Q150 448 180 460" stroke="${OUT}" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M120 460 Q150 448 180 460" stroke="#a04828" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M152 466 Q182 454 212 466" stroke="${OUT}" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M152 466 Q182 454 212 466" stroke="#b05030" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <!-- heat shimmer -->
+    <path d="M80 432 q3 -10 0 -20 M130 432 q3 -10 0 -20 M180 432 q3 -10 0 -20"
+          stroke="#aaa" stroke-width="2.5" fill="none" opacity="0.4"/>
     <text x="148" y="545" font-size="13" text-anchor="middle" fill="#ddd" font-weight="bold" font-family="Arial">גריל</text>
-    <!-- cooking items container (ui.js populates this) -->
-    <g id="grill-items"></g>
   </g>
 
   <!-- ===== RAW SAUSAGES BOX ===== -->
@@ -427,29 +430,6 @@ function sceneArt() {
     <text id="stock-sausages" x="95" y="20" font-size="13" text-anchor="middle" fill="#cc2020" font-weight="bold" font-family="Arial"></text>
   </g>
 
-  <!-- ===== TOASTER STATION ===== -->
-  <g id="st_toaster" style="cursor:pointer" transform="translate(278 452)">
-    <!-- toaster body -->
-    <rect x="0" y="0" width="118" height="66" rx="8" fill="url(#toasterGrad)" stroke="${OUT}" stroke-width="3.5"/>
-    <!-- shine -->
-    <path d="M8 6 Q59 2 110 8" stroke="rgba(255,255,255,0.5)" stroke-width="4" fill="none"/>
-    <!-- slots -->
-    <rect x="14" y="8" width="36" height="38" rx="4" fill="#2a2a2a" stroke="#666" stroke-width="2"/>
-    <rect x="66" y="8" width="36" height="38" rx="4" fill="#2a2a2a" stroke="#666" stroke-width="2"/>
-    <!-- slot shine -->
-    <path d="M16 10 L18 42" stroke="rgba(255,150,50,0.3)" stroke-width="3" stroke-linecap="round"/>
-    <path d="M68 10 L70 42" stroke="rgba(255,150,50,0.3)" stroke-width="3" stroke-linecap="round"/>
-    <!-- lever left -->
-    <rect x="22" y="44" width="8" height="18" rx="3" fill="#888" stroke="${OUT}" stroke-width="2"/>
-    <circle cx="26" cy="60" r="5" fill="#aaa" stroke="${OUT}" stroke-width="2"/>
-    <!-- lever right -->
-    <rect x="74" y="44" width="8" height="18" rx="3" fill="#888" stroke="${OUT}" stroke-width="2"/>
-    <circle cx="78" cy="60" r="5" fill="#aaa" stroke="${OUT}" stroke-width="2"/>
-    <!-- label -->
-    <text x="59" y="82" font-size="12" text-anchor="middle" fill="#5a3a10" font-weight="bold" font-family="Arial">טוסטר</text>
-    <!-- toasting item container (ui.js) -->
-    <g id="toaster-item"></g>
-  </g>
 
   <!-- ===== BUNS STACK ===== -->
   <g id="st_buns" style="cursor:pointer" transform="translate(278 530)">
@@ -823,18 +803,17 @@ function heldArt(held) {
 
   const bun = held.bun || 'regular';
   const isPretzel = bun === 'pretzel';
-  const toasted = held.toasted || 0; // 0=raw, 1=toasted, 2=burnt
-
-  const bunTopColor = toasted === 2 ? '#3a2010' : toasted === 1 ? '#c07828' : (isPretzel ? '#a06020' : '#f8d078');
-  const bunTopMid = toasted === 2 ? '#2a1a08' : toasted === 1 ? '#a05e18' : (isPretzel ? '#784010' : '#e8b258');
+  const bunTopColor = isPretzel ? '#a06020' : '#f8d078';
+  const bunTopMid = isPretzel ? '#784010' : '#e8b258';
   const bunBotColor = isPretzel ? '#904e18' : '#e8b258';
 
-  // sausage color based on doneness
-  const doneness = held.sausage_doneness !== undefined ? held.sausage_doneness : 1; // 0=raw,1=perfect,2=burnt
-  const sausColor = doneness === 2 ? '#2a1a10' : doneness === 0 ? '#e89090' : '#a8542c';
-  const sausHighlight = doneness === 0 ? '#f0b8b0' : '#d07040';
-  const isVegan = held.sausage_type === 'vegan';
-  const veganColor = doneness === 2 ? '#2a2a18' : doneness === 0 ? '#a0d060' : '#6a9830';
+  const sausType = held.sausage && held.sausage.type;
+  const isVegan = sausType === 'vegan';
+  const sausColor = '#a8542c';
+  const sausHighlight = '#d07040';
+  const veganColor = '#6a9830';
+
+  const tp = held.toppings || {};
 
   const activeSausColor = isVegan ? veganColor : sausColor;
   const activeSausHighlight = isVegan ? '#c0e880' : sausHighlight;
@@ -851,11 +830,7 @@ function heldArt(held) {
        transform="rotate(${sx > 30 ? 14 : sx < -30 ? -14 : 5} ${sx} ${sy})"/>`;
     }).join('');
 
-  // toast lines if toasted
-  const toastLines = toasted >= 1
-    ? `<path d="M-60 -56 Q0 -70 60 -56" stroke="rgba(100,50,5,0.4)" stroke-width="3" fill="none"/>
-       <path d="M-40 -62 Q0 -72 40 -62" stroke="rgba(100,50,5,0.25)" stroke-width="2" fill="none"/>`
-    : '';
+  const toastLines = '';
 
   // toppings
   let toppings = '';
@@ -869,7 +844,7 @@ function heldArt(held) {
       <path d="M30 -4 Q36 -22 42 -4" stroke="#2a1a10" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.65"/>`;
   }
 
-  if (held.kraut) {
+  if (tp.kraut) {
     const kz = [[-58,-24],[-30,-32],[0,-34],[30,-32],[58,-24]];
     kz.forEach(function(p){
       const kx = p[0], ky = p[1];
@@ -879,26 +854,26 @@ function heldArt(held) {
     });
   }
 
-  if (held.onions) {
+  if (tp.onions) {
     for (let o = 0; o < 6; o++) {
       const ox = -60 + o * 24, oy = -36 - (o % 2) * 8;
       toppings += `<rect x="${ox}" y="${oy}" width="16" height="10" rx="3" fill="#e8c040" stroke="#b08020" stroke-width="1.2"/>`;
     }
   }
 
-  if (held.mustard) {
+  if (tp.mustard) {
     toppings += `<path d="M-78 -22 q12 -16 24 0 t24 0 t24 0 t24 0" stroke="#f0c419" stroke-width="8" fill="none" stroke-linecap="round"/>
     <path d="M-76 -24 q12 -13 22 0 t22 0 t22 0 t22 0" stroke="#fde648" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>`;
   }
 
-  if (held.ketchup) {
+  if (tp.ketchup) {
     toppings += `<path d="M-78 -14 q12 -16 24 0 t24 0 t24 0 t24 0" stroke="#d63b2f" stroke-width="8" fill="none" stroke-linecap="round"/>
     <path d="M-76 -16 q12 -13 22 0 t22 0 t22 0 t22 0" stroke="#f25040" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>`;
   }
 
   // top bun (rises as layers added)
-  const layerCount = (held.sausage ? 1 : 0) + (held.kraut ? 1 : 0) + (held.onions ? 1 : 0) +
-                     (held.mustard ? 1 : 0) + (held.ketchup ? 1 : 0);
+  const layerCount = (held.sausage ? 1 : 0) + (tp.kraut ? 1 : 0) + (tp.onions ? 1 : 0) +
+                     (tp.mustard ? 1 : 0) + (tp.ketchup ? 1 : 0);
   const topBunY = -46 - layerCount * 8;
 
   const topBun = `
@@ -961,8 +936,7 @@ function bubbleOrderText(order) {
   const lines = [];
   if (order.bun) {
     const bunName = order.bun === 'pretzel' ? 'בייגלה' : 'לחמנייה';
-    const toastSuffix = order.wantsToast ? ' קלויה' : '';
-    lines.push(bunName + toastSuffix);
+    lines.push(bunName);
   }
   if (order.sausage) {
     lines.push(order.sausage === 'vegan' ? '🌿 טבעוני' : '🌭 נקניקייה');

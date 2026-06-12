@@ -12,8 +12,6 @@ function startDay(retry) {
   state.dayCoins = 0;
   state.strikes = 0;
   state.held = null;
-  state.grill = [];
-  state.toaster = null;
   state.stock = { buns: BALANCE.stockMax, sausages: BALANCE.stockMax };
   state.restocking = null;
   state.customers = [null, null, null];
@@ -115,12 +113,6 @@ function tick(ts) {
     });
     if (!state.running) return;
 
-    // grill progress
-    state.grill.forEach((s) => { s.t += dt / BALANCE.burnTime; });
-
-    // toaster progress
-    if (state.toaster) state.toaster.t += dt / BALANCE.toastBurnTime;
-
     // restocking
     if (state.restocking) {
       state.restocking.timeLeft -= dt;
@@ -134,32 +126,14 @@ function tick(ts) {
     }
 
     renderCustomers();
-    renderGrill();
-    renderToaster();
     renderHUD();
   }
   rafId = requestAnimationFrame(tick);
 }
 
-/* ---------- doneness helpers ---------- */
-function donenessOf(t) {
-  const perfStart = BALANCE.grillTime / BALANCE.burnTime;     // ~0.545
-  const perfEnd = 8 / BALANCE.burnTime;                        // ~0.727
-  if (t < perfStart) return "raw";
-  if (t <= perfEnd + 0.08) return "perfect";
-  return "burnt";
-}
-function toastStateOf(t) {
-  const wStart = BALANCE.toastPerfectWindow[0] / BALANCE.toastBurnTime;
-  const wEnd = BALANCE.toastPerfectWindow[1] / BALANCE.toastBurnTime;
-  if (t < wStart) return 0;       // not toasted enough → counts as untoasted
-  if (t <= wEnd) return 1;        // perfect
-  return 2;                       // burnt
-}
-
 /* ---------- input ---------- */
 function emptyHeld(bun) {
-  return { bun, toasted: 0, sausage: null, toppings: { ketchup: 0, mustard: 0, onions: 0, kraut: 0 }, fries: false, soda: false };
+  return { bun, sausage: null, toppings: { ketchup: 0, mustard: 0, onions: 0, kraut: 0 }, fries: false, soda: false };
 }
 
 function takeBun(kind) {
@@ -188,25 +162,10 @@ function handleSvgClick(e) {
   const cust = find(".cust-hit");
   if (cust) { serveTo(parseInt(cust.dataset.slot, 10)); return; }
 
-  // grill sausage pickup
-  const gs = find("[data-grill]");
-  if (gs) { pickFromGrill(parseInt(gs.dataset.grill, 10)); return; }
-
-  if (find("#st_rawSausages")) {
-    if (state.grill.length >= 4) { toast("הגריל מלא!"); return; }
-    if (state.stock.sausages <= 0) { toast("אין נקניקיות! מלא מלאי 📦"); sfx("trash"); return; }
-    state.stock.sausages -= 1;
-    state.grill.push({ type: "sausage", t: 0, id: Math.random() });
-    sfx("sizzle"); renderGrill(); renderStock(); return;
-  }
-  if (find("#st_veganSausages")) {
-    if (state.grill.length >= 4) { toast("הגריל מלא!"); return; }
-    state.grill.push({ type: "vegan", t: 0, id: Math.random() });
-    sfx("sizzle"); renderGrill(); return;
-  }
+  if (find("#st_rawSausages")) { addSausage("sausage"); return; }
+  if (find("#st_veganSausages")) { addSausage("vegan"); return; }
   if (find("#st_buns")) { takeBun("regular"); return; }
   if (find("#st_pretzelBuns")) { takeBun("pretzel"); return; }
-  if (find("#st_toaster")) { toasterClick(); return; }
   if (find("#st_ketchup")) { addTopping("ketchup"); return; }
   if (find("#st_mustard")) { addTopping("mustard"); return; }
   if (find("#st_onions")) { addTopping("onions"); return; }
@@ -237,44 +196,14 @@ function handleSvgClick(e) {
   }
 }
 
-function pickFromGrill(idx) {
-  const s = state.grill[idx];
-  if (!s) return;
+function addSausage(type) {
   if (!state.held) { toast("קח לחמנייה קודם!"); return; }
   if (state.held.sausage) { toast("כבר יש נקניקייה בלחמנייה"); return; }
-  const doneness = donenessOf(s.t);
-  state.grill.splice(idx, 1);
-  state.held.sausage = { type: s.type, doneness };
-  if (doneness === "perfect") sfx("ding"); else sfx("click");
-  if (doneness === "raw") toast("⚠️ הנקניקייה עדיין נאה!");
-  if (doneness === "burnt") toast("⚠️ הנקניקייה נשרפה!");
-  renderGrill(); renderHeld();
-}
-
-function toasterClick() {
-  // take toasted bun out
-  if (state.toaster) {
-    const ts = toastStateOf(state.toaster.t);
-    if (state.held) { toast("כבר יש לחמנייה ביד"); return; }
-    state.held = emptyHeld(state.toaster.bun);
-    state.held.toasted = ts;
-    state.toaster = null;
-    sfx(ts === 1 ? "ding" : "click");
-    if (ts === 0) toast("הלחמנייה לא נקלתה מספיק");
-    if (ts === 2) toast("⚠️ הלחמנייה נשרפה!");
-    renderToaster(); renderHeld();
-    return;
-  }
-  // put held (empty, untoasted) bun in
-  if (state.held && !state.held.sausage && state.held.toasted === 0 &&
-      !Object.values(state.held.toppings).some(Boolean) && !state.held.fries && !state.held.soda) {
-    state.toaster = { bun: state.held.bun, t: 0 };
-    state.held = null;
-    sfx("sizzle");
-    renderToaster(); renderHeld();
-    return;
-  }
-  toast("אפשר לקלות רק לחמנייה ריקה");
+  if (state.stock.sausages <= 0) { toast("אין נקניקיות! מלא מלאי 📦"); sfx("trash"); return; }
+  state.stock.sausages -= 1;
+  state.held.sausage = { type };
+  sfx("sizzle");
+  renderHeld(); renderStock();
 }
 
 function serveTo(slot) {
@@ -287,12 +216,13 @@ function serveTo(slot) {
     return;
   }
   const patienceFrac = c.patience / c.maxPatience;
-  const reward = customerReward(c, res.quality, patienceFrac);
+  const quality = patienceFrac > 0.55 ? "perfect" : "ok";
+  const reward = customerReward(c, quality, patienceFrac);
   const coins = Math.round(reward.coins * (1 + (state.combo - 1) * 0.25));
   state.dayCoins += coins;
   state.score += reward.score * state.combo;
   state.stats.served += 1;
-  if (res.quality === "perfect") {
+  if (quality === "perfect") {
     state.stats.perfect += 1;
     state.comboStreak += 1;
     if (state.comboStreak % 2 === 0 && state.combo < BALANCE.comboMax) state.combo += 1;
@@ -305,7 +235,7 @@ function serveTo(slot) {
   sfx("serve");
   setTimeout(() => sfx("coin"), 180);
   coinPop(slot, coins);
-  toast(res.quality === "perfect" ? "✨ מושלם! +" + coins : "👍 הוגש! +" + coins);
+  toast(quality === "perfect" ? "✨ מושלם! +" + coins : "👍 הוגש! +" + coins);
   renderHeld(); renderCustomers(); renderHUD();
 }
 
