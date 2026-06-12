@@ -26,13 +26,15 @@ const state = {
   comboStreak: 0,
   strikes: 0,                // 3 = day failed
 
-  // held item being assembled: null or {bun:'regular'|'pretzel', toasted:0|1|2, sausage:null|{type,doneness}, toppings:{ketchup,mustard,onions,kraut}, fries:false, soda:false}
+  // held item being assembled on the tray: null or
+  // {bun, sausage:null|{type,doneness}, sausageFrom:{x,y}, toppings:{ketchup,mustard,onions,kraut}, fries, soda, anim:{...0..1}}
   held: null,
 
-  // grill: array of {type:'sausage'|'vegan', t:0..1 cook progress, id}
+  // serve fly-to-customer animation: null or {slot, t, dur, coins, quality}
+  serveAnim: null,
+
+  // grill: array of {type:'sausage'|'vegan', t:cook progress (cosmetic), id}
   grill: [],
-  // toaster: null or {bun:'regular'|'pretzel', t:0..1}
-  toaster: null,
 
   // stock
   stock: { buns: 8, sausages: 8 },

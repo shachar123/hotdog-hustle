@@ -13,18 +13,25 @@ function showScreen(name) {
   $("screen-" + name).classList.add("active");
 }
 
+/* ---------- assembly tray geometry ---------- */
+const TRAY_X = 515;     // meal origin x on the tray
+const TRAY_Y = 600;     // meal base y on the tray
+
 /* ---------- scene setup (once per day) ---------- */
 function renderScene() {
   $("game-svg").innerHTML = `
     <defs>${customerGradDefs()}</defs>
     ${sceneArt()}
     <g id="layer-customers"></g>
-    <g id="layer-bubbles"></g>
-    <g id="layer-held"></g>
-    <g id="layer-fx"></g>
+    <g id="layer-bubbles" pointer-events="none"></g>
+    <g id="layer-assembly" pointer-events="none"></g>
+    <g id="layer-ui"></g>
+    <g id="layer-fx" pointer-events="none"></g>
   `;
   renderCustomers();
-  renderHeld();
+  renderGrill();
+  renderAssembly();
+  renderServeButton();
   renderStock();
 }
 
@@ -62,7 +69,7 @@ function renderCustomers() {
   bubbles.innerHTML = bubSvg;
 }
 
-/* ---------- grill / toaster dynamic items ---------- */
+/* ---------- grill dynamic items ---------- */
 function renderGrill() {
   const g = $("game-svg").querySelector("#grill-items");
   if (!g) return;
@@ -71,19 +78,32 @@ function renderGrill() {
     .join("");
 }
 
-function renderToaster() {
-  const g = $("game-svg").querySelector("#toaster-item");
+/* ---------- assembly tray meal ---------- */
+function renderAssembly() {
+  const g = $("game-svg").querySelector("#layer-assembly");
   if (!g) return;
-  g.innerHTML = state.toaster ? toastingBunArt(state.toaster.bun, state.toaster.t) : "";
+  if (!state.held) { g.innerHTML = ""; return; }
+
+  // serve fly-to-customer transform
+  let dx = 0, dy = 0, scale = 1, opacity = 1;
+  if (state.serveAnim) {
+    const e = easeOut(state.serveAnim.t);
+    const cx = SLOT_X[state.serveAnim.slot], cy = CUST_Y + 110;
+    dx = (cx - TRAY_X) * e;
+    dy = (cy - TRAY_Y) * e;
+    scale = 1 - 0.45 * e;
+    opacity = 1 - 0.25 * e;
+  }
+
+  g.innerHTML = `<g transform="translate(${TRAY_X + dx} ${TRAY_Y + dy}) scale(${scale})" opacity="${opacity}">${mealArt(state.held)}</g>`;
 }
 
-/* ---------- held assembly ---------- */
-function renderHeld() {
-  const g = $("game-svg").querySelector("#layer-held");
+/* ---------- serve button + ready glow ---------- */
+function renderServeButton() {
+  const g = $("game-svg").querySelector("#layer-ui");
   if (!g) return;
-  g.innerHTML = state.held
-    ? `<g transform="translate(500 640) scale(0.85)">${heldArt(state.held)}</g>`
-    : "";
+  const ready = !!(state.held && state.held.sausage) && !state.serveAnim;
+  g.innerHTML = ready ? serveButtonArt() : "";
 }
 
 /* ---------- stock ---------- */

@@ -78,6 +78,8 @@ var BALANCE = {
   spawnMinMs: 3500,
   spawnDecayPerDay: 300,
   patienceDecayPerDay: 0.04,
+  burnTime: 16,                 // cosmetic only: seconds for a dog to go raw->perfect->burned
+  grillMax: 4,                  // max dogs on the grill at once
   restockTime: 2,
   stockMax: 10,
   scoreServe: 10,

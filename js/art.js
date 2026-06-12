@@ -113,6 +113,10 @@ function customerGradDefs() {
       <stop offset="0%" stop-color="#b87c44"/>
       <stop offset="100%" stop-color="#7a4c22"/>
     </linearGradient>
+    <linearGradient id="trayGrad" x1="0.5" y1="0" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#d8a866"/>
+      <stop offset="100%" stop-color="#a06c34"/>
+    </linearGradient>
     <radialGradient id="vendorSkin" cx="0.42" cy="0.35" r="0.72" gradientUnits="objectBoundingBox">
       <stop offset="0%" stop-color="#f4c490"/>
       <stop offset="55%" stop-color="#d8a273"/>
@@ -385,7 +389,7 @@ function sceneArt() {
     <image href="img/img_vendor.png" x="-52" y="-58" width="104" height="116" preserveAspectRatio="xMidYMin meet"/>
   </g>
 
-  <!-- ===== GRILL (decoration) ===== -->
+  <!-- ===== GRILL (interactive — dogs cook here) ===== -->
   <g>
     <!-- grill body -->
     <rect x="36" y="432" width="224" height="96" rx="10" fill="#282828" stroke="${OUT}" stroke-width="4"/>
@@ -396,19 +400,15 @@ function sceneArt() {
     <line x1="44" y1="463" x2="252" y2="463" stroke="#555" stroke-width="3.5"/>
     <line x1="44" y1="474" x2="252" y2="474" stroke="#555" stroke-width="3.5"/>
     <line x1="44" y1="485" x2="252" y2="485" stroke="#555" stroke-width="3.5"/>
-    <!-- 4 sausages always sitting on grill (cooked and ready) -->
-    <path d="M60 460 Q90 448 120 460" stroke="${OUT}" stroke-width="12" fill="none" stroke-linecap="round"/>
-    <path d="M60 460 Q90 448 120 460" stroke="#a04828" stroke-width="9" fill="none" stroke-linecap="round"/>
-    <path d="M88 466 Q118 454 148 466" stroke="${OUT}" stroke-width="12" fill="none" stroke-linecap="round"/>
-    <path d="M88 466 Q118 454 148 466" stroke="#b05030" stroke-width="9" fill="none" stroke-linecap="round"/>
-    <path d="M120 460 Q150 448 180 460" stroke="${OUT}" stroke-width="12" fill="none" stroke-linecap="round"/>
-    <path d="M120 460 Q150 448 180 460" stroke="#a04828" stroke-width="9" fill="none" stroke-linecap="round"/>
-    <path d="M152 466 Q182 454 212 466" stroke="${OUT}" stroke-width="12" fill="none" stroke-linecap="round"/>
-    <path d="M152 466 Q182 454 212 466" stroke="#b05030" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <line x1="44" y1="496" x2="252" y2="496" stroke="#555" stroke-width="3.5"/>
+    <!-- grill heat glow -->
+    <rect x="44" y="436" width="208" height="68" rx="6" fill="rgba(255,100,0,0.10)"/>
     <!-- heat shimmer -->
     <path d="M80 432 q3 -10 0 -20 M130 432 q3 -10 0 -20 M180 432 q3 -10 0 -20"
           stroke="#aaa" stroke-width="2.5" fill="none" opacity="0.4"/>
-    <text x="148" y="545" font-size="13" text-anchor="middle" fill="#ddd" font-weight="bold" font-family="Arial">גריל</text>
+    <text x="148" y="522" font-size="12" text-anchor="middle" fill="#ddd" font-weight="bold" font-family="Arial">גריל 🔥</text>
+    <!-- cooking dogs container (filled by renderGrill) -->
+    <g id="grill-items"></g>
   </g>
 
   <!-- ===== RAW SAUSAGES BOX ===== -->
@@ -432,7 +432,7 @@ function sceneArt() {
 
 
   <!-- ===== BUNS STACK ===== -->
-  <g id="st_buns" style="cursor:pointer" transform="translate(278 530)">
+  <g id="st_buns" style="cursor:pointer" transform="translate(250 552)">
     <!-- bun stack (3 buns) -->
     <!-- bottom bun shadow -->
     <ellipse cx="60" cy="76" rx="54" ry="8" fill="rgba(0,0,0,0.18)"/>
@@ -461,7 +461,7 @@ function sceneArt() {
   </g>
 
   <!-- ===== PRETZEL BUNS STACK ===== -->
-  <g id="st_pretzelBuns" style="cursor:pointer" transform="translate(410 540)">
+  <g id="st_pretzelBuns" style="cursor:pointer" transform="translate(645 552)">
     <!-- shadow -->
     <ellipse cx="50" cy="72" rx="44" ry="7" fill="rgba(0,0,0,0.2)"/>
     <!-- bun 2 (bottom) -->
@@ -482,7 +482,7 @@ function sceneArt() {
   </g>
 
   <!-- ===== VEGAN SAUSAGES BOX ===== -->
-  <g id="st_veganSausages" style="cursor:pointer" transform="translate(560 545)">
+  <g id="st_veganSausages" style="cursor:pointer" transform="translate(755 552)">
     <rect x="0" y="0" width="100" height="68" rx="6" fill="#4a7a38" stroke="${OUT}" stroke-width="3"/>
     <rect x="4" y="4" width="92" height="42" rx="4" fill="#5a9848" stroke="#2a5a20" stroke-width="2"/>
     <!-- vegan sausages -->
@@ -525,7 +525,7 @@ function sceneArt() {
   </g>
 
   <!-- ===== ONIONS PAN ===== -->
-  <g id="st_onions" style="cursor:pointer" transform="translate(560 450)">
+  <g id="st_onions" style="cursor:pointer" transform="translate(450 432)">
     <!-- pan body -->
     <ellipse cx="55" cy="62" rx="52" ry="14" fill="#2a2a2a" stroke="${OUT}" stroke-width="3"/>
     <rect x="4" y="40" width="102" height="24" rx="4" fill="#3a3a3a" stroke="${OUT}" stroke-width="3"/>
@@ -547,7 +547,7 @@ function sceneArt() {
   </g>
 
   <!-- ===== KRAUT BOWL ===== -->
-  <g id="st_kraut" style="cursor:pointer" transform="translate(425 450)">
+  <g id="st_kraut" style="cursor:pointer" transform="translate(300 432)">
     <!-- clay bowl -->
     <ellipse cx="65" cy="82" rx="60" ry="12" fill="rgba(0,0,0,0.2)"/>
     <path d="M8 56 Q8 82 65 84 Q122 82 122 56 L118 42 Q65 30 12 42 Z"
@@ -587,7 +587,7 @@ function sceneArt() {
   </g>
 
   <!-- ===== SODA FRIDGE ===== -->
-  <g id="st_soda" style="cursor:pointer" transform="translate(690 545)">
+  <g id="st_soda" style="cursor:pointer" transform="translate(870 545)">
     <!-- fridge body -->
     <rect x="0" y="0" width="80" height="112" rx="10" fill="url(#sodaFridgeGrad)" stroke="${OUT}" stroke-width="3.5"/>
     <!-- fridge shine -->
@@ -656,7 +656,7 @@ function sceneArt() {
   </g>
 
   <!-- ===== TRASH CAN ===== -->
-  <g id="st_trash" style="cursor:pointer" transform="translate(810 545)">
+  <g id="st_trash" style="cursor:pointer" transform="translate(958 548)">
     <!-- lid -->
     <rect x="-4" y="-14" width="58" height="12" rx="4" fill="#666" stroke="${OUT}" stroke-width="2.5"/>
     <path d="M12 -26 h22 l2 12 h-26z" fill="#666" stroke="${OUT}" stroke-width="2.2"/>
@@ -672,11 +672,27 @@ function sceneArt() {
     <text x="25" y="90" font-size="11" text-anchor="middle" fill="#cc3333" font-weight="bold" font-family="Arial" stroke="#fff" stroke-width="1" paint-order="stroke">🗑️</text>
   </g>
 
-  <!-- dynamic layers -->
-  <g id="custLayer"></g>
-  <g id="handLayer"></g>
-  <g id="fxLayer"></g>
+  ${assemblyTrayArt()}
   `;
+}
+
+/* ---------- assemblyTrayArt: wooden serving board (center, static backdrop) ---------- */
+function assemblyTrayArt() {
+  return `
+  <g id="assembly-tray">
+    <!-- soft shadow under the board -->
+    <ellipse cx="510" cy="648" rx="148" ry="22" fill="rgba(0,0,0,0.22)"/>
+    <!-- wooden board -->
+    <rect x="372" y="556" width="276" height="96" rx="16" fill="url(#trayGrad)" stroke="${OUT}" stroke-width="4"/>
+    <!-- board plank lines -->
+    <line x1="372" y1="588" x2="648" y2="588" stroke="rgba(90,55,20,0.28)" stroke-width="2"/>
+    <line x1="372" y1="620" x2="648" y2="620" stroke="rgba(90,55,20,0.22)" stroke-width="2"/>
+    <!-- inner light plate -->
+    <ellipse cx="510" cy="604" rx="120" ry="34" fill="rgba(255,245,225,0.30)"/>
+    <ellipse cx="510" cy="604" rx="120" ry="34" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
+    <!-- label -->
+    <text x="510" y="646" font-size="12" text-anchor="middle" fill="#5a3510" font-weight="bold" font-family="Arial">מגש ההרכבה</text>
+  </g>`;
 }
 
 /* ---------- grillSausageArt ---------- */
@@ -797,26 +813,28 @@ function toastingBunArt(bun, t) {
   </g>`;
 }
 
-/* ---------- heldArt ---------- */
-function heldArt(held) {
-  if (!held) return '';
+/* ---------- mealArt: the meal assembled on the tray (animated) ---------- */
+function mealArt(meal) {
+  if (!meal) return '';
+  const anim = meal.anim || {};
+  const P = (k) => (anim[k] === undefined ? 1 : Math.max(0, Math.min(1, anim[k])));
+  const ease = (t) => 1 - Math.pow(1 - t, 3);
 
-  const bun = held.bun || 'regular';
+  const bun = meal.bun || 'regular';
   const isPretzel = bun === 'pretzel';
   const bunTopColor = isPretzel ? '#a06020' : '#f8d078';
   const bunTopMid = isPretzel ? '#784010' : '#e8b258';
   const bunBotColor = isPretzel ? '#904e18' : '#e8b258';
 
-  const sausType = held.sausage && held.sausage.type;
+  const sausType = meal.sausage && meal.sausage.type;
   const isVegan = sausType === 'vegan';
-  const sausColor = '#a8542c';
-  const sausHighlight = '#d07040';
-  const veganColor = '#6a9830';
-
-  const tp = held.toppings || {};
-
+  const doneness = meal.sausage && meal.sausage.doneness;
+  // cosmetic doneness tint
+  const sausColor = doneness === 'raw' ? '#d98a6a' : doneness === 'burnt' ? '#4a2c18' : '#a8542c';
+  const veganColor = doneness === 'raw' ? '#a8d878' : doneness === 'burnt' ? '#3a4a20' : '#6a9830';
+  const tp = meal.toppings || {};
   const activeSausColor = isVegan ? veganColor : sausColor;
-  const activeSausHighlight = isVegan ? '#c0e880' : sausHighlight;
+  const activeSausHighlight = isVegan ? '#c0e880' : '#d07040';
 
   const seeds = isPretzel ?
     `<circle cx="-22" cy="-76" r="3" fill="rgba(255,255,255,0.65)"/>
@@ -830,80 +848,84 @@ function heldArt(held) {
        transform="rotate(${sx > 30 ? 14 : sx < -30 ? -14 : 5} ${sx} ${sy})"/>`;
     }).join('');
 
-  const toastLines = '';
-
-  // toppings
-  let toppings = '';
-  if (held.sausage) {
-    toppings += `
+  // --- sausage (animates in from its grill position) ---
+  let sausage = '';
+  if (meal.sausage) {
+    const sp = ease(P('sausage'));
+    let offx = 0, offy = 0;
+    if (meal.sausageFrom) {
+      offx = (meal.sausageFrom.x - 510) / 0.8;
+      offy = (meal.sausageFrom.y - 600) / 0.8;
+    }
+    const dx = (1 - sp) * offx, dy = (1 - sp) * offy;
+    sausage = `<g transform="translate(${dx.toFixed(1)} ${dy.toFixed(1)})" opacity="${sp.toFixed(2)}">
       <path d="M-82 -8 Q0 -30 82 -8" stroke="${OUT}" stroke-width="26" fill="none" stroke-linecap="round"/>
       <path d="M-82 -8 Q0 -30 82 -8" stroke="${activeSausColor}" stroke-width="22" fill="none" stroke-linecap="round"/>
       <path d="M-78 -9 Q0 -30 78 -9" stroke="${activeSausHighlight}" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.35"/>
-      <path d="M-50 -4 Q-44 -22 -38 -4" stroke="#2a1a10" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.65"/>
-      <path d="M-10 -4 Q-4 -22 2 -4" stroke="#2a1a10" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.65"/>
-      <path d="M30 -4 Q36 -22 42 -4" stroke="#2a1a10" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.65"/>`;
+      <path d="M-50 -4 Q-44 -22 -38 -4" stroke="#2a1a10" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.55"/>
+      <path d="M-10 -4 Q-4 -22 2 -4" stroke="#2a1a10" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.55"/>
+      <path d="M30 -4 Q36 -22 42 -4" stroke="#2a1a10" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.55"/>
+    </g>`;
   }
 
+  // --- toppings (each drops in + fades) ---
+  function dropWrap(key, inner) {
+    const p = ease(P(key));
+    const dy = (1 - p) * -26;
+    return `<g transform="translate(0 ${dy.toFixed(1)})" opacity="${p.toFixed(2)}">${inner}</g>`;
+  }
+  let toppings = '';
   if (tp.kraut) {
-    const kz = [[-58,-24],[-30,-32],[0,-34],[30,-32],[58,-24]];
-    kz.forEach(function(p){
+    let k = '';
+    [[-58,-24],[-30,-32],[0,-34],[30,-32],[58,-24]].forEach(function(p){
       const kx = p[0], ky = p[1];
-      toppings += `
-        <path d="M${kx-16} ${ky} q8 -12 16 0 t16 0 t12 0" stroke="#b0b040" stroke-width="8" fill="none" stroke-linecap="round"/>
+      k += `<path d="M${kx-16} ${ky} q8 -12 16 0 t16 0 t12 0" stroke="#b0b040" stroke-width="8" fill="none" stroke-linecap="round"/>
         <path d="M${kx-14} ${ky+5} q7 -10 14 0 t14 0 t12 0" stroke="#d8d860" stroke-width="5" fill="none" stroke-linecap="round"/>`;
     });
+    toppings += dropWrap('kraut', k);
   }
-
   if (tp.onions) {
-    for (let o = 0; o < 6; o++) {
-      const ox = -60 + o * 24, oy = -36 - (o % 2) * 8;
-      toppings += `<rect x="${ox}" y="${oy}" width="16" height="10" rx="3" fill="#e8c040" stroke="#b08020" stroke-width="1.2"/>`;
+    let o = '';
+    for (let i = 0; i < 6; i++) {
+      const ox = -60 + i * 24, oy = -36 - (i % 2) * 8;
+      o += `<rect x="${ox}" y="${oy}" width="16" height="10" rx="3" fill="#e8c040" stroke="#b08020" stroke-width="1.2"/>`;
     }
+    toppings += dropWrap('onions', o);
   }
-
   if (tp.mustard) {
-    toppings += `<path d="M-78 -22 q12 -16 24 0 t24 0 t24 0 t24 0" stroke="#f0c419" stroke-width="8" fill="none" stroke-linecap="round"/>
-    <path d="M-76 -24 q12 -13 22 0 t22 0 t22 0 t22 0" stroke="#fde648" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>`;
+    toppings += dropWrap('mustard',
+      `<path d="M-78 -22 q12 -16 24 0 t24 0 t24 0 t24 0" stroke="#f0c419" stroke-width="8" fill="none" stroke-linecap="round"/>
+       <path d="M-76 -24 q12 -13 22 0 t22 0 t22 0 t22 0" stroke="#fde648" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>`);
   }
-
   if (tp.ketchup) {
-    toppings += `<path d="M-78 -14 q12 -16 24 0 t24 0 t24 0 t24 0" stroke="#d63b2f" stroke-width="8" fill="none" stroke-linecap="round"/>
-    <path d="M-76 -16 q12 -13 22 0 t22 0 t22 0 t22 0" stroke="#f25040" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>`;
+    toppings += dropWrap('ketchup',
+      `<path d="M-78 -14 q12 -16 24 0 t24 0 t24 0 t24 0" stroke="#d63b2f" stroke-width="8" fill="none" stroke-linecap="round"/>
+       <path d="M-76 -16 q12 -13 22 0 t22 0 t22 0 t22 0" stroke="#f25040" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>`);
   }
 
   // top bun (rises as layers added)
-  const layerCount = (held.sausage ? 1 : 0) + (tp.kraut ? 1 : 0) + (tp.onions ? 1 : 0) +
+  const layerCount = (meal.sausage ? 1 : 0) + (tp.kraut ? 1 : 0) + (tp.onions ? 1 : 0) +
                      (tp.mustard ? 1 : 0) + (tp.ketchup ? 1 : 0);
   const topBunY = -46 - layerCount * 8;
-
   const topBun = `
     <path d="M-100 ${topBunY + 14} Q-108 ${topBunY - 24} -50 ${topBunY - 48} Q0 ${topBunY - 60} 50 ${topBunY - 48} Q108 ${topBunY - 24} 100 ${topBunY + 14} Q50 ${topBunY + 2} 0 ${topBunY + 2} Q-50 ${topBunY + 2} -100 ${topBunY + 14}Z"
           fill="${bunTopColor}" stroke="${OUT}" stroke-width="4"/>
     <path d="M-68 ${topBunY - 44} Q0 ${topBunY - 58} 68 ${topBunY - 44}" stroke="${bunTopMid}" stroke-width="3" fill="none" opacity="0.55"/>
     <path d="M-42 ${topBunY - 52} Q0 ${topBunY - 62} 42 ${topBunY - 52}" stroke="rgba(255,240,180,0.4)" stroke-width="3" fill="none"/>
-    ${toastLines.replace(/-56/g, String(topBunY - 10)).replace(/-62/g, String(topBunY - 16))}
     ${seeds}`;
-
-  // hand
-  const hand = `
-    <path d="M50 140 L130 300 L-120 300 L-30 140 Z" fill="url(#handGrad)" stroke="${OUT}" stroke-width="4"/>
-    <g>
-      <path d="M20 16 q10 -34 28 -12 q4 18 -6 28z" fill="url(#handGrad)" stroke="${OUT}" stroke-width="3.5"/>
-      <path d="M50 14 q12 -32 28 -10 q2 16 -8 26z" fill="url(#handGrad)" stroke="${OUT}" stroke-width="3.5"/>
-      <path d="M80 10 q14 -28 26 -8 q0 14 -10 24z" fill="url(#handGrad)" stroke="${OUT}" stroke-width="3.5"/>
-      <ellipse cx="36" cy="10" rx="7" ry="5" fill="#f6d9b8" opacity=".7"/>
-    </g>`;
 
   // bottom bun
   const botBun = `
+    <ellipse cx="0" cy="36" rx="104" ry="16" fill="rgba(0,0,0,0.15)"/>
     <path d="M-100 14 Q-108 -18 -80 -24 L80 -24 Q108 -18 100 14 Q50 26 0 26 Q-50 26 -100 14Z"
           fill="${bunBotColor}" stroke="${OUT}" stroke-width="4"/>
     <path d="M-90 -16 Q0 -34 90 -16" stroke="rgba(255,220,130,0.42)" stroke-width="3.5" fill="none"/>`;
 
-  // extras: fries and soda
+  // extras: fries and soda (pop in)
   let extras = '';
-  if (held.fries) {
-    extras += `<g transform="translate(120 -20)">
+  if (meal.fries) {
+    const p = ease(P('fries'));
+    extras += `<g transform="translate(150 4) scale(${(0.5 + 0.5 * p).toFixed(2)})" opacity="${p.toFixed(2)}">
       <rect x="-18" y="-40" width="36" height="48" rx="4" fill="#e84020" stroke="${OUT}" stroke-width="2"/>
       <g fill="url(#friesGrad)" stroke="#b08020" stroke-width="1">
         <rect x="-14" y="-56" width="7" height="28" rx="2"/>
@@ -912,20 +934,39 @@ function heldArt(held) {
       </g>
     </g>`;
   }
-  if (held.soda) {
-    extras += `<g transform="translate(-130 -10)">
+  if (meal.soda) {
+    const p = ease(P('soda'));
+    extras += `<g transform="translate(-150 6) scale(${(0.5 + 0.5 * p).toFixed(2)})" opacity="${p.toFixed(2)}">
       <rect x="-16" y="-52" width="32" height="60" rx="5" fill="#c8102e" stroke="${OUT}" stroke-width="2.5"/>
       <ellipse cx="0" cy="-53" rx="16" ry="4" fill="#e0e0e0" stroke="${OUT}" stroke-width="1.5"/>
       <path d="M-12 -46 L-12 4" stroke="rgba(255,255,255,0.3)" stroke-width="3" stroke-linecap="round"/>
     </g>`;
   }
 
-  return `<g>
-    ${hand}
-    ${botBun}
-    ${toppings}
-    ${topBun}
+  // whole-bun slide-in from above the tray
+  const bp = ease(P('bun'));
+  const slideY = (1 - bp) * -130;
+
+  return `<g transform="translate(0 -36) scale(0.8)">
     ${extras}
+    <g transform="translate(0 ${slideY.toFixed(1)})" opacity="${bp.toFixed(2)}">
+      ${botBun}
+      ${sausage}
+      ${toppings}
+      ${topBun}
+    </g>
+  </g>`;
+}
+
+/* ---------- serveButtonArt: pulsing "serve" button on the tray ---------- */
+function serveButtonArt() {
+  const pulse = 1 + 0.05 * Math.sin(performance.now() / 260);
+  const glow = 0.45 + 0.25 * (0.5 + 0.5 * Math.sin(performance.now() / 260));
+  return `<g id="st_serve" style="cursor:pointer" transform="translate(510 668) scale(${pulse.toFixed(3)})">
+    <rect x="-86" y="-22" width="172" height="44" rx="22" fill="#0e9e3e" opacity="${glow.toFixed(2)}"/>
+    <rect x="-80" y="-19" width="160" height="38" rx="19" fill="#16b94c" stroke="#0a6e2c" stroke-width="3"/>
+    <text x="0" y="7" font-size="20" text-anchor="middle" fill="#fff" font-weight="bold" font-family="Arial"
+          style="paint-order:stroke" stroke="#0a6e2c" stroke-width="0.6">הגש ✓</text>
   </g>`;
 }
 
