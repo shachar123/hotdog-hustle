@@ -304,7 +304,7 @@ function sceneArt() {
   return `
   <defs>
     ${customerGradDefs()}
-    <clipPath id="golanPhotoClip"><rect x="0" y="0" width="72" height="68"/></clipPath>
+    <clipPath id="golanPhotoClip"><rect x="0" y="0" width="76" height="74"/></clipPath>
   </defs>
 
   <!-- sky -->
@@ -322,6 +322,18 @@ function sceneArt() {
   <!-- sidewalk -->
   <rect x="0" y="178" width="1000" height="6" fill="#bbb" stroke="${OUT}" stroke-width="2"/>
 
+  <!-- ===== GOLAN PHOTO (left wall) ===== -->
+  <g transform="translate(18 14)">
+    <rect x="-6" y="-2" width="96" height="90" rx="6" fill="#6e4525" stroke="${OUT}" stroke-width="3.5"/>
+    <rect x="2" y="4" width="80" height="78" fill="#fff" stroke="#c8a040" stroke-width="3"/>
+    <image href="img/golan.png" x="4" y="6" width="76" height="74" preserveAspectRatio="xMidYMid slice" clip-path="url(#golanPhotoClip)"/>
+    <circle cx="-2" cy="2" r="3" fill="#d8b860"/>
+    <circle cx="88" cy="2" r="3" fill="#d8b860"/>
+    <circle cx="-2" cy="86" r="3" fill="#d8b860"/>
+    <circle cx="88" cy="86" r="3" fill="#d8b860"/>
+    <text x="42" y="106" font-size="11" text-anchor="middle" fill="#5a3500" font-weight="bold" font-family="Arial">גולן</text>
+  </g>
+
   <!-- ===== GOLAN SIGN ===== -->
   <g id="golanSign">
     <!-- poles -->
@@ -334,26 +346,17 @@ function sceneArt() {
     <!-- wood grain lines -->
     <path d="M435 24 Q620 20 790 26" stroke="rgba(150,90,20,0.28)" stroke-width="2.5" fill="none"/>
     <path d="M435 40 Q620 36 790 42" stroke="rgba(150,90,20,0.18)" stroke-width="2" fill="none"/>
-    <!-- photo frame -->
-    <g transform="translate(440 22)">
-      <rect x="-6" y="-2" width="84" height="80" rx="6" fill="#6e4525" stroke="${OUT}" stroke-width="3.5"/>
-      <rect x="2" y="4" width="70" height="68" fill="#fff" stroke="#c8a040" stroke-width="3"/>
-      <image href="img/golan.png" x="4" y="6" width="66" height="64" preserveAspectRatio="xMidYMid slice" clip-path="url(#golanPhotoClip)"/>
-      <!-- corner bolts -->
-      <circle cx="-2" cy="2" r="3" fill="#d8b860"/>
-      <circle cx="76" cy="2" r="3" fill="#d8b860"/>
-      <circle cx="-2" cy="74" r="3" fill="#d8b860"/>
-      <circle cx="76" cy="74" r="3" fill="#d8b860"/>
-    </g>
     <!-- main Hebrew title -->
-    <text x="668" y="90" font-size="38" text-anchor="middle" fill="#b02418" font-weight="bold"
+    <text x="612" y="90" font-size="38" text-anchor="middle" fill="#b02418" font-weight="bold"
           style="paint-order:stroke" stroke="#fff" stroke-width="2.5" font-family="Arial">הבאסטה של גולן</text>
     <!-- English subtitle -->
-    <text x="668" y="138" font-size="20" text-anchor="middle" fill="#7a4010" font-style="italic"
+    <text x="612" y="138" font-size="20" text-anchor="middle" fill="#7a4010" font-style="italic"
           font-family="Arial">Hot Dog Hustle</text>
     <!-- hotdog emoji decoration -->
-    <text x="810" y="68" font-size="28" text-anchor="middle">🌭</text>
-    <text x="810" y="110" font-size="24" text-anchor="middle">👑</text>
+    <text x="762" y="78" font-size="28" text-anchor="middle">🌭</text>
+    <text x="762" y="115" font-size="28" text-anchor="middle">👑</text>
+    <text x="450" y="78" font-size="28" text-anchor="middle">🌭</text>
+    <text x="450" y="115" font-size="28" text-anchor="middle">⭐</text>
   </g>
 
   <!-- customer area background (180-420) -->
@@ -620,6 +623,40 @@ function sceneArt() {
     <rect x="32" y="84" width="16" height="22" rx="8" fill="#888" stroke="${OUT}" stroke-width="2"/>
     <!-- label -->
     <text x="40" y="126" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold" font-family="Arial">שתייה</text>
+  </g>
+
+  <!-- ===== RESTOCK VENDOR (appears during restocking) ===== -->
+  <g id="restock-vendor" transform="translate(150 390)" display="none">
+    <!-- body shadow -->
+    <ellipse cx="45" cy="95" rx="30" ry="8" fill="rgba(0,0,0,0.18)"/>
+    <!-- legs -->
+    <rect x="28" y="72" width="12" height="26" rx="5" fill="#3a5a8a"/>
+    <rect x="50" y="72" width="12" height="26" rx="5" fill="#3a5a8a"/>
+    <!-- torso -->
+    <rect x="18" y="38" width="54" height="40" rx="10" fill="#e84040"/>
+    <!-- arm left (reaching into crate) -->
+    <rect x="2" y="48" width="18" height="10" rx="5" fill="#e8b870" transform="rotate(30 10 53)"/>
+    <!-- arm right -->
+    <rect x="70" y="48" width="18" height="10" rx="5" fill="#e8b870" transform="rotate(-20 79 53)"/>
+    <!-- head -->
+    <circle cx="45" cy="26" r="22" fill="url(#vendorSkin)"/>
+    <!-- hair -->
+    <ellipse cx="45" cy="8" rx="21" ry="10" fill="#3a2010"/>
+    <!-- eyes -->
+    <circle cx="38" cy="24" r="3.5" fill="#fff"/>
+    <circle cx="52" cy="24" r="3.5" fill="#fff"/>
+    <circle cx="39" cy="25" r="2" fill="#2a1a08"/>
+    <circle cx="53" cy="25" r="2" fill="#2a1a08"/>
+    <!-- effort expression - furrowed brow -->
+    <path d="M34 19 Q38 17 42 19" stroke="#3a2010" stroke-width="2" fill="none"/>
+    <path d="M48 19 Q52 17 56 19" stroke="#3a2010" stroke-width="2" fill="none"/>
+    <!-- open mouth -->
+    <path d="M39 33 Q45 38 51 33" stroke="#3a2010" stroke-width="2" fill="#c85060"/>
+    <!-- sweat drop -->
+    <ellipse cx="62" cy="14" rx="4" ry="6" fill="#a0d0f0" opacity="0.85"/>
+    <path d="M62 8 l3 -6 l3 6" fill="#a0d0f0" opacity="0.85"/>
+    <!-- caption -->
+    <text x="45" y="110" font-size="12" text-anchor="middle" fill="#3a1a08" font-weight="bold" font-family="Arial">ממלא מלאי...</text>
   </g>
 
   <!-- ===== RESTOCK CRATE ===== -->
@@ -943,7 +980,7 @@ function bubbleOrderText(order) {
   const w = 175;
 
   const lineItems = lines.map(function(line, idx){
-    return `<text x="${w - 10}" y="${44 + idx * lineH}" font-size="13" text-anchor="end" fill="#2a1a08"
+    return `<text x="${w / 2}" y="${44 + idx * lineH}" font-size="13" text-anchor="middle" fill="#2a1a08"
             font-family="Arial" font-weight="${idx === 0 ? 'bold' : 'normal'}">${line}</text>`;
   }).join('');
 

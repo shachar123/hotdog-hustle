@@ -94,6 +94,8 @@ function renderStock() {
   if (ss) ss.textContent = state.stock.sausages;
   const crate = svg.querySelector("#st_restock");
   if (crate) crate.style.opacity = state.restocking ? "0.5" : "1";
+  const rv = svg.querySelector("#restock-vendor");
+  if (rv) rv.setAttribute("display", state.restocking ? "inline" : "none");
 }
 
 /* ---------- HUD ---------- */
